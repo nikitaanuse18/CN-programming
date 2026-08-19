@@ -116,3 +116,14 @@ int main()
 
     return 0;
 }
+
+\\Enter Data Word: 1011001
+
+Data Word       : 1011001
+Redundant Bits  : 4
+Total Bits      : 11
+R1              : 0
+R2              : 1
+R4              : 1
+R8              : 0
+Code Word       : 10101001110

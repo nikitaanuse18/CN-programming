@@ -76,10 +76,15 @@ int main()
     return 0;
 }
 
+//========== SENDER SIDE ==========
+
+//Enter Data Bits: 101000
+//Enter Generator: 1001
+
 //----------- OUTPUT -----------
-//Data Bits              : 10101010
-//Generator              : 1010101010
-//Number of Extra 0 Bits : 9
-//Data + Extra 0 Bits    : 10101010000000000
-//CRC Remainder          : 100000000
-//Transmitted Data       : 10101010100000000
+//Data Bits              : 101000
+//Generator              : 1001
+//Number of Extra 0 Bits : 3
+//Data + Extra 0 Bits    : 101000000
+//CRC Remainder          : 101
+//Transmitted Data       : 101000101

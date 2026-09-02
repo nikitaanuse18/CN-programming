@@ -1,123 +1,85 @@
 #include <iostream>
 #include <string>
-#include <sstream>
 using namespace std;
+string xorOperation(string a, string b)
+{
+    string result = "";
+
+    for (int i = 1; i < b.length(); i++)
+    {
+        if (a[i] == b[i])
+            result += '0';
+        else
+            result += '1';
+    }
+
+    return result;
+}
+string calculateCRC(string data, string generator)
+{
+    int genLength = generator.length();
+
+    string temp = data.substr(0, genLength);
+
+    for (int i = genLength; i < data.length(); i++)
+    {
+        if (temp[0] == '1')
+            temp = xorOperation(temp, generator);
+        else
+            temp = xorOperation(temp, string(genLength, '0'));
+
+        temp += data[i];
+    }
+    if (temp[0] == '1')
+        temp = xorOperation(temp, generator);
+    else
+        temp = xorOperation(temp, string(genLength, '0'));
+
+    return temp;
+}
 
 int main()
 {
-    string ip;
-    int octet[4];
-    char dot;
+    string data, generator;
 
-    cout << "Enter IP address: ";
-    cin >> ip;
+    cout << "========== SENDER SIDE ==========\n\n";
 
-    // Count dots
-    int dots = 0;
+    cout << "Enter Data Bits: ";
+    cin >> data;
 
-    for (char ch : ip)
-    {
-        if (ch == '.')
-            dots++;
-    }
+    cout << "Enter Generator: ";
+    cin >> generator;
+    int extraZeros = generator.length() - 1;
+    string dataWithZeros = data + string(extraZeros, '0');
+    string crc = calculateCRC(dataWithZeros, generator);
+    string transmittedData = data + crc;
 
-    // Check exactly 3 dots
-    if (dots != 3)
-    {
-        cout << "Invalid IP address";
-        return 0;
-    }
+    cout << "\n----------- OUTPUT -----------\n";
 
-    // Convert string into integers
-    stringstream ss(ip);
+    cout << "Data Bits              : " << data << endl;
+    cout << "Generator              : " << generator << endl;
 
-    for (int i = 0; i < 4; i++)
-    {
-        ss >> octet[i];
+    cout << "Number of Extra 0 Bits : "
+         << extraZeros << endl;
 
-        if (i < 3)
-            ss >> dot;
-    }
+    cout << "Data + Extra 0 Bits    : "
+         << dataWithZeros << endl;
 
-    // Check each octet
-    for (int i = 0; i < 4; i++)
-    {
-        if (octet[i] < 0 || octet[i] > 255)
-        {
-            cout << "Invalid IP address";
-            return 0;
-        }
-    }
+    cout << "CRC Remainder          : "
+         << crc << endl;
 
-    cout << "Valid IP address" << endl;
+    cout << "Transmitted Data       : "
+         << transmittedData << endl;
 
-    // Class A
-    if (octet[0] >= 1 && octet[0] <= 126)
-    {
-        cout << "Class: A" << endl;
-
-        cout << "Net ID: "
-             << octet[0] << ".0.0.0" << endl;
-
-        cout << "Host ID: "
-             << octet[3] << endl;
-    }
-
-    // Class B
-    else if (octet[0] >= 128 && octet[0] <= 191)
-    {
-        cout << "Class: B" << endl;
-
-        cout << "Net ID: "
-             << octet[0] << "."
-             << octet[1] << ".0.0" << endl;
-
-        cout << "Host ID: "
-             << octet[3] << endl;
-    }
-
-    // Class C
-    else if (octet[0] >= 192 && octet[0] <= 223)
-    {
-        cout << "Class: C" << endl;
-
-        cout << "Net ID: "
-             << octet[0] << "."
-             << octet[1] << "."
-             << octet[2] << ".0" << endl;
-
-        cout << "Host ID: "
-             << octet[3] << endl;
-    }
-
-    // Class D
-    else if (octet[0] >= 224 && octet[0] <= 239)
-    {
-        cout << "Class: D" << endl;
-        cout << "Net ID: Not applicable" << endl;
-        cout << "Host ID: Not applicable" << endl;
-    }
-
-    // Class E
-    else if (octet[0] >= 240 && octet[0] <= 255)
-    {
-        cout << "Class: E" << endl;
-        cout << "Net ID: Not applicable" << endl;
-        cout << "Host ID: Not applicable" << endl;
-    }
-
-    else
-    {
-        cout << "Invalid IP address";
-    }
+    cout << "\n=================================\n";
 
     return 0;
 }
 
-
-//OUTPUT
-//Enter IP address: 192.168.1.1
-//Valid IP address
-//Class: C
-//Net ID: 192.168.1.0
-//Host ID: 1
+//----------- OUTPUT -----------
+//Data Bits              : 10101010
+//Generator              : 1010101010
+//Number of Extra 0 Bits : 9
+//Data + Extra 0 Bits    : 10101010000000000
+//CRC Remainder          : 100000000
+//Transmitted Data       : 10101010100000000

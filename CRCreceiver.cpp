@@ -103,6 +103,10 @@ int main()
 
     return 0;
 }
+//========== RECEIVER SIDE ==========
+
+//Enter Received Data: 1000101
+//Enter Generator: 1011
 
 //----------- OUTPUT -----------
 //Received Data         : 1000101
